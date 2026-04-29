@@ -1,8 +1,12 @@
 package com.klu.clubconnect.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.klu.clubconnect.model.User;
 import com.klu.clubconnect.repository.UserRepository;
 
@@ -49,6 +53,7 @@ public class UserService {
         repo.deleteById(id);
         return true;
     }
+
     public User updateUser(Long id, User updatedUser) {
         User existingUser = repo.findById(id).orElse(null);
 
@@ -57,7 +62,18 @@ public class UserService {
         existingUser.setFullName(updatedUser.getFullName());
         existingUser.setEmail(updatedUser.getEmail());
         existingUser.setPassword(updatedUser.getPassword());
+        existingUser.setRole(updatedUser.getRole()); // ✅ include role
 
         return repo.save(existingUser);
+    }
+
+    // ✅ GRAPH DATA METHOD
+    public Map<String, Integer> getUserStats() {
+        Map<String, Integer> stats = new HashMap<>();
+
+        stats.put("Admin", (int) repo.countByRole("ADMIN"));
+        stats.put("Student", (int) repo.countByRole("STUDENT"));
+
+        return stats;
     }
 }

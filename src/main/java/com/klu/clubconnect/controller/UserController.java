@@ -1,6 +1,7 @@
 package com.klu.clubconnect.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ import com.klu.clubconnect.service.UserService;
 public class UserController {
 
     @Autowired
-    private UserService userService;   // ✅ ONLY THIS
+    private UserService userService;
 
     @PostMapping("/register")
     public User register(@RequestBody User user) {
@@ -41,6 +42,7 @@ public class UserController {
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User user) {
         User updated = userService.updateUser(id, user);
@@ -51,6 +53,7 @@ public class UserController {
             return ResponseEntity.status(404).body("User not found");
         }
     }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         boolean deleted = userService.deleteUser(id);
@@ -60,5 +63,11 @@ public class UserController {
         } else {
             return ResponseEntity.status(404).body("User not found");
         }
+    }
+
+    // ✅ GRAPH API
+    @GetMapping("/stats")
+    public Map<String, Integer> getStats() {
+        return userService.getUserStats();
     }
 }
